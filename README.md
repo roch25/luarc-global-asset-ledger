@@ -1,6 +1,10 @@
-# Global Asset Ledger
+<h1 >Global Asset Ledger</h1>
 
-A high-performance financial asset ledger designed to search, filter, sort, analyze, and manage datasets simulating millions of records, while supporting complex financial data operations with near-instant responsiveness through optimized data processing, efficient rendering, and a scalable architecture.
+<p >   A high-performance financial asset management platform designed to search, filter, analyze, and manage millions of global asset records. </p>
+
+<p >   <img src="https://img.shields.io/badge/Next.js-16.4.6-black?logo=next.js&logoColor=white" alt="Next.js" />   <img src="https://img.shields.io/badge/React-19.3.0-149eca?logo=react&logoColor=white" alt="React" />   <img src="https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white" alt="TypeScript" />   <img src="https://img.shields.io/badge/Tailwind_CSS-4.3.3-06b6d4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />   <img src="https://img.shields.io/badge/Lucide_React-1.75.0-f56565?logo=lucide&logoColor=white" alt="Lucide React" /> </p>
+
+<p >   <img src="https://img.shields.io/badge/pnpm-10.12.4-f69220?logo=pnpm&logoColor=white" alt="pnpm" />   <img src="https://img.shields.io/badge/ESLint-10.15.0-4b32c3?logo=eslint&logoColor=white" alt="ESLint" />   <img src="https://img.shields.io/badge/Prettier-3.10.1-f7b93e?logo=prettier&logoColor=black" alt="Prettier" />   <img src="https://img.shields.io/badge/Status-In_Development-yellow" alt="Project Status" /> </p>
 
 ## Getting Started
 
@@ -50,6 +54,7 @@ pnpm is the recommended package manager for this project. You can also use:
 ```bash
 npm install
 ```
+
 ```
 npm run dev
 ```
@@ -59,6 +64,7 @@ npm run dev
 ```bash
 yarn install
 ```
+
 ```
 yarn dev
 ```
@@ -68,6 +74,7 @@ yarn dev
 ```bash
 bun install
 ```
+
 ```
 bun run dev
 ```
