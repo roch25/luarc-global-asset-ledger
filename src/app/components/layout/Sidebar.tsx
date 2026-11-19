@@ -58,11 +58,15 @@ export function Sidebar() {
           </span>
         </div>
 
-        <Link href={'/settings'}>
+        <Link
+          href={'/settings'}
+          aria-label="Settings"
+          aria-current={isActive('/settings') ? 'page' : undefined}
+        >
           <div
             className={`hover:bg-sidebar-hover flex rounded-full p-2 lg:hidden ${isActive('/settings') ? 'bg-sidebar-active text-sidebar-foreground active:bg-sidebar-active' : ''}`}
           >
-            <Settings size={18} strokeWidth={1.8} className="p shrink-0" />
+            <Settings size={18} strokeWidth={1.8} className="shrink-0" />
           </div>
         </Link>
       </div>
