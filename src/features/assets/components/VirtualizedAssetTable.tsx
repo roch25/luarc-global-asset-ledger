@@ -37,6 +37,7 @@ import type {
   LedgerWorkerResponse,
   LedgerWorkerStats,
 } from '../workers/ledgerStats.worker'
+import { AssetDetailModal } from './AssetDetailModal'
 
 const ROW_HEIGHT = 68
 const OVERSCAN = 10
@@ -147,6 +148,7 @@ export function VirtualizedAssetTable({
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [workerStats, setWorkerStats] = useState<LedgerWorkerStats | null>(null)
+  const [selectedAsset, setSelectedAsset] = useState<SerializedAssetListItem | null>(null)
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const [scrollTop, setScrollTop] = useState(0)
@@ -508,11 +510,12 @@ export function VirtualizedAssetTable({
                       key={asset.publicId}
                       role="row"
                       aria-rowindex={rowIndex + 1}
+                      onClick={() => setSelectedAsset(asset)}
                       style={{
                         height: `${ROW_HEIGHT}px`,
                         transform: `translateY(${rowIndex * ROW_HEIGHT}px)`,
                       }}
-                      className={`absolute top-0 right-0 left-0 grid items-center border-b border-neutral-100 text-sm transition-colors hover:bg-neutral-100/70 ${
+                      className={`absolute top-0 right-0 left-0 grid cursor-pointer items-center border-b border-neutral-100 text-sm transition-colors hover:bg-neutral-100/70 ${
                         rowIndex % 2 === 1 ? 'bg-neutral-50/70' : 'bg-white'
                       } ${GRID_COLS}`}
                     >
@@ -520,6 +523,7 @@ export function VirtualizedAssetTable({
                         <div className="flex items-center gap-1.5">
                           <Link
                             href={`/transactions?asset=${asset.publicId}`}
+                            onClick={(e) => e.stopPropagation()}
                             title="View transaction history"
                             className="hover:text-primary font-mono text-xs font-semibold text-neutral-950 hover:underline"
                           >
@@ -673,6 +677,8 @@ export function VirtualizedAssetTable({
           </div>
         </div>
       </section>
+
+      <AssetDetailModal asset={selectedAsset} onClose={() => setSelectedAsset(null)} />
     </div>
   )
 }

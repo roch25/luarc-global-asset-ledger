@@ -1,3 +1,5 @@
+'use client'
+
 import {
   ArrowDown,
   ArrowUp,
@@ -7,6 +9,7 @@ import {
   ChevronsLeft,
 } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
 import {
   computeUnrealizedPnl,
   formatInteger,
@@ -16,7 +19,7 @@ import {
   formatUtcDateTime,
   subtractDecimals,
 } from '@/lib/format'
-import type { AssetListResult } from '../queries'
+import type { AssetListItem, AssetListResult } from '../queries'
 import {
   ASSET_CLASS_LABELS,
   ASSET_STATUS_LABELS,
@@ -26,6 +29,7 @@ import {
   DEPRECIATION_METHOD_LABELS,
   buildAssetListHref,
 } from '../schemas'
+import { AssetDetailModal } from './AssetDetailModal'
 
 interface AssetTableProps {
   query: AssetListQuery
@@ -89,6 +93,7 @@ function SortableHeader({
 
 export function AssetTable({ query, result }: AssetTableProps) {
   const { items, hasPrevPage, nextCursor, prevCursor, approxTotal, isFiltered } = result
+  const [selectedAsset, setSelectedAsset] = useState<AssetListItem | null>(null)
 
   const firstPageHref = buildAssetListHref({
     ...query,
@@ -231,12 +236,14 @@ export function AssetTable({ query, result }: AssetTableProps) {
                 return (
                   <tr
                     key={asset.publicId}
-                    className="odd:bg-white even:bg-neutral-50/70 transition-colors hover:bg-neutral-100/70"
+                    onClick={() => setSelectedAsset(asset)}
+                    className="cursor-pointer transition-colors odd:bg-white even:bg-neutral-50/70 hover:bg-neutral-100/70"
                   >
                     <td className="px-3.5 py-2.5 align-top whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <Link
                           href={`/transactions?asset=${asset.publicId}`}
+                          onClick={(e) => e.stopPropagation()}
                           title="View transaction history"
                           className="hover:text-primary font-mono text-xs font-semibold text-neutral-950 hover:underline"
                         >
@@ -456,6 +463,8 @@ export function AssetTable({ query, result }: AssetTableProps) {
           )}
         </nav>
       </div>
+
+      <AssetDetailModal asset={selectedAsset} onClose={() => setSelectedAsset(null)} />
     </section>
   )
 }
