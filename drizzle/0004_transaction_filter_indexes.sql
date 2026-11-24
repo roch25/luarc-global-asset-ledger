@@ -1,0 +1,3 @@
+CREATE INDEX "transactions_type_trade_date_id_idx" ON "transactions" USING btree ("type","trade_date","id");--> statement-breakpoint
+CREATE INDEX "transactions_currency_trade_date_id_idx" ON "transactions" USING btree ("currency","trade_date","id");--> statement-breakpoint
+CREATE INDEX "transactions_reversals_trade_date_id_idx" ON "transactions" USING btree ("trade_date","id") WHERE "transactions"."reverses_id" is not null;

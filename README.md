@@ -12,25 +12,56 @@
 
 Make sure you have the following installed:
 
-- [Node.js](https://nodejs.org/)
-- [pnpm](https://pnpm.io/installation)
+- [Node.js](https://nodejs.org/) (v20.12+ recommended)
+- [pnpm](https://pnpm.io/installation) (v10+)
+- [Docker](https://www.docker.com/products/docker-desktop/) (with Docker Compose, for running PostgreSQL 17 locally)
 
 ### Installation
 
-Clone the repository and navigate to the project directory:
+1. Clone the repository and navigate to the project directory:
 
 ```bash
 git clone https://github.com/roch25/luarc-global-asset-ledger
-```
-
-```
 cd luarc-global-asset-ledger
 ```
 
-Install dependencies:
+2. Install dependencies:
 
 ```bash
 pnpm install
+```
+
+3. Configure environment variables:
+
+Copy `.env.example` to `.env.local` and set your local database credentials:
+
+```bash
+cp .env.example .env.local
+```
+
+```env
+NEXT_PUBLIC_APP_NAME="Global Asset Ledger"
+NEXT_PUBLIC_APP_ENV="development"
+
+# Matches docker-compose.yml (loopback port 5433)
+POSTGRES_USER=username
+POSTGRES_PASSWORD=password
+POSTGRES_DB=dbname
+POSTGRES_PORT=5433
+DATABASE_URL=postgres://username:password@localhost:5433/dbname
+```
+
+4. Start the PostgreSQL container, apply migrations, and seed the database:
+
+```bash
+# Start PostgreSQL 17 in Docker (bound to 127.0.0.1:5433)
+pnpm db:up
+
+# Apply Drizzle schema migrations
+pnpm db:migrate
+
+# Seed reference data, 1M assets, and 2M transactions
+pnpm db:seed
 ```
 
 ### Development
@@ -83,20 +114,28 @@ Use one package manager consistently to avoid lockfile conflicts.
 
 ## Available Scripts
 
-| Command                  | Description                  |
-| ------------------------ | ---------------------------- |
-| `pnpm dev`               | Start the development server |
-| `pnpm build`             | Create a production build    |
-| `pnpm start`             | Run the production server    |
-| `pnpm lint`              | Run ESLint                   |
-| `pnpm exec tsc --noEmit` | Check TypeScript types       |
-| `pnpm format`            | Format project files         |
-| `pnpm format:check`      | Check code formatting        |
+| Command                  | Description                                              |
+| ------------------------ | -------------------------------------------------------- |
+| `pnpm dev`               | Start the development server                             |
+| `pnpm build`             | Create a production build                                |
+| `pnpm start`             | Run the production server                                |
+| `pnpm lint`              | Run ESLint                                               |
+| `pnpm typecheck`         | Check TypeScript types (`tsc --noEmit`)                  |
+| `pnpm format`            | Format project files                                     |
+| `pnpm format:check`      | Check code formatting                                    |
+| `pnpm db:up`             | Start the local PostgreSQL Docker container              |
+| `pnpm db:down`           | Stop and remove the local PostgreSQL Docker container    |
+| `pnpm db:generate`       | Generate Drizzle SQL migrations from `src/lib/db/schema` |
+| `pnpm db:migrate`        | Apply pending Drizzle database migrations                |
+| `pnpm db:studio`         | Open Drizzle Studio to inspect database tables           |
+| `pnpm db:seed`           | Seed 1M assets and 2M transactions into the database     |
 
 ## Project Stack
 
 - **Framework:** Next.js (App Router)
 - **Language:** TypeScript
+- **Database:** PostgreSQL 17 (Docker) + Drizzle ORM
+- **Validation:** Zod
 - **Styling:** Tailwind CSS
 - **Package Manager:** pnpm
 
@@ -112,17 +151,6 @@ src/
 
 public/
 ```
-
-The project structure will evolve as application features and shared components are introduced.
-
-## Development Guidelines
-
-- Use TypeScript for application code.
-- Prefer reusable, modular components.
-- Prioritize performance and scalability.
-- Keep server-side and client-side responsibilities clearly separated.
-- Maintain consistent formatting and code quality.
-- Avoid unnecessary dependencies.
 
 ## Learn More
 
