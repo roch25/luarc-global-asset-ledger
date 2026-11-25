@@ -24,6 +24,7 @@ function getSqlClient(): postgres.Sql {
         application_name: 'global-asset-ledger',
         // Protect the pool from runaway queries on very large tables.
         statement_timeout: 15_000,
+        'pg_trgm.word_similarity_threshold': 0.25,
       },
     })
   }
