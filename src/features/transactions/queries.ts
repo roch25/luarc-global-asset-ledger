@@ -99,7 +99,22 @@ export async function listTransactions(
     } else if (ISIN_REGEX.test(upper)) {
       conditions.push(eq(assets.isin, upper))
     } else {
-      conditions.push(ilike(assets.symbol, `${escapeLike(upper)}%`))
+      const tokens = query.q.split(/\s+/).filter(Boolean).slice(0, 5)
+      for (const token of tokens) {
+        const tokenPattern = `%${escapeLike(token)}%`
+        const cond =
+          token.length >= 4
+            ? or(
+                ilike(assets.symbol, tokenPattern),
+                ilike(assets.name, tokenPattern),
+                sql`${token} <% ${assets.name}`,
+              )
+            : or(
+                ilike(assets.symbol, tokenPattern),
+                ilike(assets.name, tokenPattern),
+              )
+        if (cond) conditions.push(cond)
+      }
     }
   }
 

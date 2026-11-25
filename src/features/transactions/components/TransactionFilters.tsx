@@ -44,10 +44,6 @@ export function TransactionFilters({ query, currencies }: TransactionFiltersProp
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    setSearchText(query.q ?? '')
-  }, [query.q])
-
-  useEffect(() => {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current)
     }
@@ -104,7 +100,6 @@ export function TransactionFilters({ query, currencies }: TransactionFiltersProp
               className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400"
             />
             <input
-              type="search"
               value={searchText}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Symbol prefix, exact ISIN, or transaction ID..."

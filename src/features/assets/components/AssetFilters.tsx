@@ -45,11 +45,6 @@ export function AssetFilters({ query, options }: AssetFiltersProps) {
   const [searchText, setSearchText] = useState(query.q ?? '')
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Keep input in sync when navigating via links / browser history / reset.
-  useEffect(() => {
-    setSearchText(query.q ?? '')
-  }, [query.q])
-
   useEffect(() => {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current)
@@ -77,7 +72,7 @@ export function AssetFilters({ query, options }: AssetFiltersProps) {
       if ((trimmed || undefined) !== query.q) {
         navigate({ q: trimmed || undefined })
       }
-    }, 300)
+    }, 500)
   }
 
   function handleSearchSubmit(e: React.FormEvent) {
@@ -129,7 +124,6 @@ export function AssetFilters({ query, options }: AssetFiltersProps) {
               className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-neutral-400"
             />
             <input
-              type="search"
               value={searchText}
               onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Search symbol, asset name, or exact ISIN"

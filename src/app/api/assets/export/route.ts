@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, ilike, or, type SQL } from 'drizzle-orm'
+import { and, asc, eq, gt, ilike, or, sql, type SQL } from 'drizzle-orm'
 import type { NextRequest } from 'next/server'
 import { type RawSearchParams, parseAssetSearchParams } from '@/features/assets/schemas'
 import { db } from '@/lib/db'
@@ -98,8 +98,19 @@ export async function GET(request: NextRequest) {
       )
       if (cond) baseConditions.push(cond)
     } else {
-      const cond = or(ilike(assets.symbol, pattern), ilike(assets.name, pattern))
-      if (cond) baseConditions.push(cond)
+      const tokens = query.q.split(/\s+/).filter(Boolean).slice(0, 5)
+      for (const token of tokens) {
+        const tokenPattern = `%${escapeLike(token)}%`
+        const cond =
+          token.length >= 4
+            ? or(
+                ilike(assets.symbol, tokenPattern),
+                ilike(assets.name, tokenPattern),
+                sql`${token} <% ${assets.name}`,
+              )
+            : or(ilike(assets.symbol, tokenPattern), ilike(assets.name, tokenPattern))
+        if (cond) baseConditions.push(cond)
+      }
     }
   }
 

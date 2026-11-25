@@ -222,8 +222,19 @@ export async function listAssets(
       )
       if (searchCond) conditions.push(searchCond)
     } else {
-      const searchCond = or(ilike(assets.symbol, pattern), ilike(assets.name, pattern))
-      if (searchCond) conditions.push(searchCond)
+      const tokens = query.q.split(/\s+/).filter(Boolean).slice(0, 5)
+      for (const token of tokens) {
+        const tokenPattern = `%${escapeLike(token)}%`
+        const tokenCond =
+          token.length >= 4
+            ? or(
+                ilike(assets.symbol, tokenPattern),
+                ilike(assets.name, tokenPattern),
+                sql`${token} <% ${assets.name}`,
+              )
+            : or(ilike(assets.symbol, tokenPattern), ilike(assets.name, tokenPattern))
+        if (tokenCond) conditions.push(tokenCond)
+      }
     }
   }
 
